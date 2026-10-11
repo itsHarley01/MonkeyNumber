@@ -1,4 +1,3 @@
-
 import { useState } from 'react'
 import NumberGrid from './component/NumberGrid'
 
@@ -24,18 +23,14 @@ function App() {
   const [revealed, setRevealed] = useState<number[]>([])
   const [wrongCell, setWrongCell] = useState<number | null>(null)
 
+  function startReveal() {
+    if (phase === 'playing' || phase === 'reveal') return
 
-function startReveal() {
-  if (phase === 'playing' || phase === 'reveal') return
-
-  if (phase === 'idle' || phase === 'failed' || phase === 'won') {
     setPositions(generatePositions())
+    setRevealed([])
+    setWrongCell(null)
+    setPhase('reveal')
   }
-
-  setRevealed([])
-  setWrongCell(null)
-  setPhase('reveal')
-}
 
   function stopReveal() {
     setPhase((current) => current === 'reveal' ? 'playing' : current)
@@ -45,6 +40,8 @@ function startReveal() {
     if (phase !== 'playing') return
 
     const number = positions.indexOf(cell) + 1
+
+    if (number === 0) return
 
     if (number === revealed.length + 1) {
       const next = [...revealed, number]
